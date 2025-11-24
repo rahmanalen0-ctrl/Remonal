@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, user-scalable=yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Remonal">
+    <meta name="theme-color" content="#0066cc">
+    <meta name="description" content="Remonal - Reminder, Planner, and Diary Application">
+    <title>Remonal - Reminder, Planner, Diary</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+    <div id="app">
+        <div id="login-page" class="page active">
+            <div class="auth-container">
+                <div class="auth-box">
+                    <h1>Login</h1>
+                    <form id="login-form">
+                        <input type="email" id="login-email" placeholder="Email" required>
+                        <input type="password" id="login-password" placeholder="Password" required>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+                    <p>Don't have an account? <a href="#" onclick="showPage('register-page')">Register</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="register-page" class="page">
+            <div class="auth-container">
+                <div class="auth-box">
+                    <h1>Register</h1>
+                    <form id="register-form">
+                        <input type="text" id="register-name" placeholder="Full Name" required>
+                        <input type="email" id="register-email" placeholder="Email" required>
+                        <input type="password" id="register-password" placeholder="Password" required>
+                        <input type="password" id="register-confirm-password" placeholder="Confirm Password" required>
+                        <select id="register-timezone">
+                            <option value="UTC">UTC</option>
+                            <option value="America/New_York">America/New_York</option>
+                            <option value="America/Chicago">America/Chicago</option>
+                            <option value="America/Denver">America/Denver</option>
+                            <option value="America/Los_Angeles">America/Los_Angeles</option>
+                            <option value="Europe/London">Europe/London</option>
+                            <option value="Europe/Paris">Europe/Paris</option>
+                            <option value="Asia/Tokyo">Asia/Tokyo</option>
+                            <option value="Asia/Shanghai">Asia/Shanghai</option>
+                            <option value="Asia/Dubai">Asia/Dubai</option>
+                            <option value="Australia/Sydney">Australia/Sydney</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </form>
+                    <p>Already have an account? <a href="#" onclick="showPage('login-page')">Login</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="dashboard-page" class="page">
+            <div class="container">
+                <nav class="sidebar" id="sidebar">
+                    <div class="sidebar-header">
+                        <h2>Remonal</h2>
+                        <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+                    </div>
+                    <ul class="nav-menu">
+                        <li><a href="#" onclick="showPage('dashboard-page')" class="nav-link active">Dashboard</a></li>
+                        <li><a href="#" onclick="showPage('reminders-page')" class="nav-link">Reminders</a></li>
+                        <li><a href="#" onclick="showPage('tasks-page')" class="nav-link">Tasks</a></li>
+                        <li><a href="#" onclick="showPage('notes-page')" class="nav-link">Diary</a></li>
+                        <li><a href="#" onclick="showPage('settings-page')" class="nav-link">Settings</a></li>
+                        <li><a href="#" onclick="logout()" class="nav-link">Logout</a></li>
+                    </ul>
+                </nav>
+
+                <div class="main-content">
+                    <header class="header">
+                        <input type="text" class="search-input" placeholder="Search reminders, tasks, diary...">
+                        <div class="user-menu">
+                            <span id="user-name"></span>
+                            <button class="btn-icon">👤</button>
+                        </div>
+                    </header>
+
+                    <div class="dashboard-grid">
+                        <div class="dashboard-section">
+                            <h3>Upcoming Reminders</h3>
+                            <div id="upcoming-reminders" class="list"></div>
+                            <button class="btn btn-secondary" onclick="showPage('reminders-page')">View All</button>
+                        </div>
+
+                        <div class="dashboard-section">
+                            <h3>Recent Tasks</h3>
+                            <div id="recent-tasks" class="list"></div>
+                            <button class="btn btn-secondary" onclick="showPage('tasks-page')">View All</button>
+                        </div>
+
+                        <div class="dashboard-section">
+                            <h3>Pinned Diary Entries</h3>
+                            <div id="pinned-notes" class="list"></div>
+                            <button class="btn btn-secondary" onclick="showPage('notes-page')">View All</button>
+                        </div>
+
+                        <div class="dashboard-section">
+                            <h3>Quick Stats</h3>
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <span id="total-reminders" class="stat-number">0</span>
+                                    <span class="stat-label">Reminders</span>
+                                </div>
+                                <div class="stat-card">
+                                    <span id="total-tasks" class="stat-number">0</span>
+                                    <span class="stat-label">Tasks</span>
+                                </div>
+                                <div class="stat-card">
+                                    <span id="total-notes" class="stat-number">0</span>
+                                    <span class="stat-label">Diary</span>
+                                </div>
+                                <div class="stat-card">
+                                    <span id="completed-today" class="stat-number">0</span>
+                                    <span class="stat-label">Completed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="reminders-page" class="page">
+            <div class="container">
+                <nav class="sidebar" id="sidebar">
+                    <div class="sidebar-header">
+                        <h2>Remonal</h2>
+                        <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+                    </div>
+                    <ul class="nav-menu">
+                        <li><a href="#" onclick="showPage('dashboard-page')" class="nav-link">Dashboard</a></li>
+                        <li><a href="#" onclick="showPage('reminders-page')" class="nav-link active">Reminders</a></li>
+                        <li><a href="#" onclick="showPage('tasks-page')" class="nav-link">Tasks</a></li>
+                        <li><a href="#" onclick="showPage('notes-page')" class="nav-link">Diary</a></li>
+                        <li><a href="#" onclick="showPage('settings-page')" class="nav-link">Settings</a></li>
+                        <li><a href="#" onclick="logout()" class="nav-link">Logout</a></li>
+                    </ul>
+                </nav>
+
+                <div class="main-content">
+                    <header class="header">
+                        <h2>Reminders</h2>
+                        <button class="btn btn-primary" onclick="openReminderModal()">+ Add Reminder</button>
+                    </header>
+
+                    <div class="filters">
+                        <select id="reminder-status-filter" onchange="filterReminders()">
+                            <option value="">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                        <select id="reminder-category-filter" onchange="filterReminders()">
+                            <option value="">All Categories</option>
+                            <option value="personal">Personal</option>
+                            <option value="study">Study</option>
+                            <option value="work">Work</option>
+                        </select>
+                    </div>
+
+                    <div id="reminders-list" class="list"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tasks-page" class="page">
+            <div class="container">
+                <nav class="sidebar" id="sidebar">
+                    <div class="sidebar-header">
+                        <h2>Remonal</h2>
+                        <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+                    </div>
+                    <ul class="nav-menu">
+                        <li><a href="#" onclick="showPage('dashboard-page')" class="nav-link">Dashboard</a></li>
+                        <li><a href="#" onclick="showPage('reminders-page')" class="nav-link">Reminders</a></li>
+                        <li><a href="#" onclick="showPage('tasks-page')" class="nav-link active">Tasks</a></li>
+                        <li><a href="#" onclick="showPage('notes-page')" class="nav-link">Diary</a></li>
+                        <li><a href="#" onclick="showPage('settings-page')" class="nav-link">Settings</a></li>
+                        <li><a href="#" onclick="logout()" class="nav-link">Logout</a></li>
+                    </ul>
+                </nav>
+
+                <div class="main-content">
+                    <header class="header">
+                        <h2>Tasks</h2>
+                        <button class="btn btn-primary" onclick="openTaskModal()">+ Add Task</button>
+                    </header>
+
+                    <div class="filters">
+                        <select id="task-status-filter" onchange="filterTasks()">
+                            <option value="">All Status</option>
+                            <option value="todo">To Do</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                        <select id="task-priority-filter" onchange="filterTasks()">
+                            <option value="">All Priorities</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+
+                    <div id="tasks-list" class="list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diary List Page -->
+        <div id="notes-page" class="page">
+            <div class="container">
+                <nav class="sidebar" id="sidebar">
+                    <div class="sidebar-header">
+                        <h2>Remonal</h2>
+                        <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+                    </div>
+                    <ul class="nav-menu">
+                        <li><a href="#" onclick="showPage('dashboard-page')" class="nav-link">Dashboard</a></li>
+                        <li><a href="#" onclick="showPage('reminders-page')" class="nav-link">Reminders</a></li>
+                        <li><a href="#" onclick="showPage('tasks-page')" class="nav-link">Tasks</a></li>
+                        <li><a href="#" onclick="showPage('notes-page')" class="nav-link active">Diary</a></li>
+                        <li><a href="#" onclick="showPage('settings-page')" class="nav-link">Settings</a></li>
+                        <li><a href="#" onclick="logout()" class="nav-link">Logout</a></li>
+                    </ul>
+                </nav>
+
+                <div class="main-content">
+                    <header class="header">
+                        <h2>Diary Entries</h2>
+                        <button class="btn btn-primary" onclick="openDiaryEditor()">+ New Entry</button>
+                    </header>
+
+                    <div class="filters">
+                        <input type="text" id="note-search" placeholder="Search diary entries..."
+                            onkeyup="searchNotes()">
+                    </div>
+
+                    <div id="notes-list" class="list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diary Editor Page (Word/Docs Style) -->
+        <div id="diary-editor-page" class="page">
+            <div class="diary-editor-container">
+                <!-- Toolbar -->
+                <div class="diary-toolbar">
+                    <div class="toolbar-section">
+                        <button class="toolbar-btn" onclick="goBackToDiaryList()" title="Back to List">
+                            <span>←</span> Back
+                        </button>
+                    </div>
+                    <div class="toolbar-section">
+                        <input type="text" id="diary-title" class="diary-title-input" placeholder="Untitled Entry"
+                            onchange="markDiaryEdited()">
+                    </div>
+                    <div class="toolbar-section">
+                        <span id="diary-status" class="diary-status">Unsaved</span>
+                        <button class="toolbar-btn btn-save" onclick="saveDiaryEntry()" title="Save (Ctrl+S)">
+                            💾 Save
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Format Toolbar -->
+                <div class="diary-format-toolbar">
+                    <div class="toolbar-group">
+                        <button class="format-btn" onclick="formatText('bold')" title="Bold (Ctrl+B)"><b>B</b></button>
+                        <button class="format-btn" onclick="formatText('italic')"
+                            title="Italic (Ctrl+I)"><i>I</i></button>
+                        <button class="format-btn" onclick="formatText('underline')"
+                            title="Underline (Ctrl+U)"><u>U</u></button>
+                        <button class="format-btn" onclick="formatText('strikethrough')"
+                            title="Strikethrough"><s>S</s></button>
+                    </div>
+                    <div class="toolbar-group">
+                        <button class="format-btn" onclick="formatText('insertUnorderedList')" title="Bullet List">•
+                            List</button>
+                        <button class="format-btn" onclick="formatText('insertOrderedList')" title="Numbered List">1.
+                            List</button>
+                    </div>
+                    <div class="toolbar-group">
+                        <select id="font-family" onchange="changeFontFamily(this.value)" title="Font">
+                            <option value="">Font</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Verdana">Verdana</option>
+                        </select>
+                        <select id="font-size" onchange="changeFontSize(this.value)" title="Size">
+                            <option value="">Size</option>
+                            <option value="1">Small</option>
+                            <option value="3">Normal</option>
+                            <option value="5">Large</option>
+                            <option value="6">Extra Large</option>
+                        </select>
+                    </div>
+                    <div class="toolbar-group">
+                        <button class="format-btn" onclick="formatText('justifyLeft')" title="Align Left">⬅
+                            Left</button>
+                        <button class="format-btn" onclick="formatText('justifyCenter')" title="Center">⬍
+                            Center</button>
+                        <button class="format-btn" onclick="formatText('justifyRight')" title="Align Right">➡
+                            Right</button>
+                    </div>
+                </div>
+
+                <!-- Main Editor -->
+                <div class="diary-editor-wrapper">
+                    <div id="diary-editor" class="diary-editor" contenteditable="true"
+                        placeholder="Start writing your diary entry..."></div>
+                </div>
+
+                <!-- Footer -->
+                <div class="diary-footer">
+                    <div class="diary-info">
+                        <span id="word-count">Words: 0</span>
+                        <span id="char-count">Characters: 0</span>
+                    </div>
+                    <div class="diary-tags">
+                        <input type="text" id="diary-tags" placeholder="Add tags (comma-separated)"
+                            onchange="markDiaryEdited()">
+                    </div>
+                    <div class="diary-actions">
+                        <button class="btn btn-secondary" onclick="goBackToDiaryList()">Cancel</button>
+                        <button class="btn btn-primary" onclick="saveDiaryEntry()">Save Entry</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="settings-page" class="page">
+            <div class="container">
+                <nav class="sidebar" id="sidebar">
+                    <div class="sidebar-header">
+                        <h2>Remonal</h2>
+                        <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+                    </div>
+                    <ul class="nav-menu">
+                        <li><a href="#" onclick="showPage('dashboard-page')" class="nav-link">Dashboard</a></li>
+                        <li><a href="#" onclick="showPage('reminders-page')" class="nav-link">Reminders</a></li>
+                        <li><a href="#" onclick="showPage('tasks-page')" class="nav-link">Tasks</a></li>
+                        <li><a href="#" onclick="showPage('notes-page')" class="nav-link">Diary</a></li>
+                        <li><a href="#" onclick="showPage('settings-page')" class="nav-link active">Settings</a></li>
+                        <li><a href="#" onclick="logout()" class="nav-link">Logout</a></li>
+                    </ul>
+                </nav>
+
+                <div class="main-content">
+                    <header class="header">
+                        <h2>Settings</h2>
+                    </header>
+
+                    <div class="settings-container">
+                        <div class="settings-section">
+                            <h3>Profile</h3>
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" id="settings-name" placeholder="Your Name">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="settings-email" placeholder="Your Email" disabled>
+                            </div>
+                            <button class="btn btn-primary" onclick="updateProfile()">Update Profile</button>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Security</h3>
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input type="password" id="settings-new-password" placeholder="New Password">
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm Password</label>
+                                <input type="password" id="settings-confirm-password" placeholder="Confirm Password">
+                            </div>
+                            <button class="btn btn-primary" onclick="updatePassword()">Change Password</button>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3>Preferences</h3>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="settings-dark-mode" onchange="toggleDarkMode()">
+                                    Dark Mode
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="reminder-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Add Reminder</h2>
+                    <button class="btn-close" onclick="closeReminderModal()">×</button>
+                </div>
+                <form id="reminder-form">
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" id="reminder-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="reminder-description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Date & Time *</label>
+                        <input type="datetime-local" id="reminder-datetime" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="reminder-category">
+                            <option value="personal">Personal</option>
+                            <option value="study">Study</option>
+                            <option value="work">Work</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save Reminder</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeReminderModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="task-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Add Task</h2>
+                    <button class="btn-close" onclick="closeTaskModal()">×</button>
+                </div>
+                <form id="task-form">
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" id="task-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="task-description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Due Date</label>
+                        <input type="datetime-local" id="task-due-date">
+                    </div>
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select id="task-priority">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save Task</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeTaskModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="note-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Add Diary Entry</h2>
+                    <button class="btn-close" onclick="closeNoteModal()">×</button>
+                </div>
+                <form id="note-form">
+                    <div class="form-group">
+                        <label>Title *</label>
+                        <input type="text" id="note-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Diary Entry *</label>
+                        <div class="editor-toolbar">
+                            <button type="button" class="btn-small" onclick="insertTag('b')"><b>B</b></button>
+                            <button type="button" class="btn-small" onclick="insertTag('i')"><i>I</i></button>
+                            <button type="button" class="btn-small" onclick="insertTag('u')"><u>U</u></button>
+                        </div>
+                        <textarea id="note-body" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Tags (comma-separated)</label>
+                        <input type="text" id="note-tags">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save Diary Entry</button>
+                        <button type="button" class="btn btn-secondary" onclick="closeNoteModal()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+
+</html>

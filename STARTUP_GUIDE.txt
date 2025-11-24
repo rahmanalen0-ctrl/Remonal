@@ -1,0 +1,104 @@
+INSTALLATION AND STARTUP GUIDE
+==============================
+
+QUICK START (Windows):
+1. Open Command Prompt or PowerShell in the sojibWebApp folder
+2. Run: python -m pip install -r requirements.txt
+3. Run: python manage.py migrate (if not already done)
+4. Run: python manage.py runserver
+5. Open browser and go to: http://localhost:8000
+
+Or simply double-click: start.bat
+
+QUICK START (Linux/Mac):
+1. Open Terminal in the sojibWebApp folder
+2. Run: python3 -m pip install -r requirements.txt
+3. Run: python3 manage.py migrate (if not already done)
+4. Run: python3 manage.py runserver
+5. Open browser and go to: http://localhost:8000
+
+PROJECT IS NOW FULLY CONFIGURED:
+✓ Database created (db.sqlite3)
+✓ All migrations applied
+✓ API endpoints ready
+✓ Frontend HTML/CSS/JS ready
+✓ Authentication system ready
+
+FIRST TIME SETUP:
+1. Start the server (see above)
+2. Go to http://localhost:8000 in your browser
+3. Click "Register" to create a new account
+4. Fill in your details and click "Register"
+5. You'll be logged in to the dashboard
+
+FEATURES AVAILABLE:
+- Dashboard with statistics and quick overview
+- Reminders (create, edit, delete, complete)
+- Tasks/Planner (create, edit, delete, filter by priority/status)
+- Notes (create, edit, delete, pin, archive, tag, search)
+- Settings (update profile, change password, dark mode)
+- Responsive design (works on mobile, tablet, desktop)
+
+TROUBLESHOOTING:
+
+Q: Port 8000 already in use
+A: Run: python manage.py runserver 8080
+
+Q: Static files not loading
+A: Run: python manage.py collectstatic --noinput
+
+Q: Database issues
+A: Delete db.sqlite3 and run: python manage.py migrate
+
+Q: Import errors
+A: Reinstall dependencies: pip install -r requirements.txt
+
+SYSTEM REQUIREMENTS:
+- Python 3.8+
+- 50MB disk space
+- Browser with JavaScript enabled
+
+DATABASE:
+- SQLite (included, stored in db.sqlite3)
+- No additional setup needed
+
+SECURITY NOTES:
+- Change SECRET_KEY in sojibWebApp/settings.py for production
+- Use HTTPS in production
+- Set DEBUG=False for production
+- Update ALLOWED_HOSTS for your domain
+
+API ENDPOINTS:
+All API endpoints start with /api/
+Examples:
+- POST /api/auth/register
+- POST /api/auth/login
+- GET /api/reminders?user_id=1
+- POST /api/reminders
+- GET /api/tasks?user_id=1
+- POST /api/tasks
+- GET /api/notes?user_id=1
+- POST /api/notes
+
+ADMIN PANEL:
+- Go to: http://localhost:8000/admin
+- Create superuser: python manage.py createsuperuser
+- Default username: admin
+- Then login to manage data
+
+DEVELOPMENT:
+- Frontend: /templates/index.html
+- Frontend JS: /static/js/app.js
+- Frontend CSS: /static/css/style.css
+- Backend API: /app/views.py
+- Database Models: /app/models.py
+
+PRODUCTION DEPLOYMENT:
+1. Set DEBUG = False in settings.py
+2. Run: python manage.py collectstatic
+3. Use gunicorn instead of runserver
+4. Set up proper database (PostgreSQL recommended)
+5. Configure environment variables
+6. Use reverse proxy (nginx/Apache)
+
+For more information, see README.md

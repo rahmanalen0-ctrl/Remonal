@@ -1,4 +1,8 @@
-const API_URL = 'http://localhost:8000/api';
+// Dynamic API URL based on environment
+const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:8000/api'
+    : `${window.location.protocol}//${window.location.host}/api`;
+
 let currentUser = null;
 let accessToken = null;
 let allReminders = [];

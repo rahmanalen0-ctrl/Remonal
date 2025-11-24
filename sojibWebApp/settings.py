@@ -3,9 +3,9 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-sojibwebapp-dev-key'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-sojibwebapp-dev-key')
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -93,6 +93,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
+    "https://remonals.onrender.com",
+    "http://remonals.onrender.com",
 ]
 
 CORS_ALLOW_CREDENTIALS = True

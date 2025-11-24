@@ -32,6 +32,13 @@ def generate_tokens(user_id):
 def register(request):
     try:
         data = request.data
+        
+        # Validate required fields
+        required_fields = ['name', 'email', 'password']
+        for field in required_fields:
+            if not data.get(field):
+                return Response({'error': f'Missing required field: {field}'}, status=status.HTTP_400_BAD_REQUEST)
+        
         if User.objects.filter(email=data.get('email')).exists():
             return Response({'error': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -50,6 +57,9 @@ def register(request):
             'user': UserSerializer(user).data
         }, status=status.HTTP_201_CREATED)
     except Exception as e:
+        print(f'Registration error: {str(e)}')
+        import traceback
+        traceback.print_exc()
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
@@ -57,6 +67,13 @@ def register(request):
 def login(request):
     try:
         data = request.data
+        
+        # Validate required fields
+        if not data.get('email'):
+            return Response({'error': 'Missing required field: email'}, status=status.HTTP_400_BAD_REQUEST)
+        if not data.get('password'):
+            return Response({'error': 'Missing required field: password'}, status=status.HTTP_400_BAD_REQUEST)
+        
         user = User.objects.get(email=data.get('email'))
         
         if not check_password(data.get('password'), user.password_hash):
@@ -72,6 +89,9 @@ def login(request):
     except User.DoesNotExist:
         return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
+        print(f'Login error: {str(e)}')
+        import traceback
+        traceback.print_exc()
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])

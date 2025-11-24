@@ -109,6 +109,7 @@ async function register() {
         });
 
         const data = await response.json();
+        console.log('Registration response:', data);
 
         if (response.ok) {
             accessToken = data.access;
@@ -118,11 +119,12 @@ async function register() {
             showPage('dashboard-page');
             document.getElementById('user-name').textContent = currentUser.name;
         } else {
-            alert(data.error || 'Registration failed');
+            console.error('Registration error response:', response.status, data);
+            alert(data.error || `Registration failed: ${response.status}`);
         }
     } catch (error) {
-        console.error('Error:', error);
-        alert('Error during registration');
+        console.error('Registration fetch error:', error);
+        alert('Error during registration: ' + error.message);
     }
 }
 
@@ -138,6 +140,7 @@ async function login() {
         });
 
         const data = await response.json();
+        console.log('Login response:', data);
 
         if (response.ok) {
             accessToken = data.access;
@@ -153,11 +156,12 @@ async function login() {
                 document.getElementById('settings-dark-mode').checked = true;
             }
         } else {
-            alert(data.error || 'Login failed');
+            console.error('Login error response:', response.status, data);
+            alert(data.error || `Login failed: ${response.status}`);
         }
     } catch (error) {
-        console.error('Error:', error);
-        alert('Error during login');
+        console.error('Login fetch error:', error);
+        alert('Error during login: ' + error.message);
     }
 }
 

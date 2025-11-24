@@ -1,4 +1,4 @@
-# Sojib Web App - Reminder, Planner, Notes
+# Keizen Web App - Reminder, Planner, Notes
 
 A complete web application for managing reminders, tasks, and notes with a simple 2005-style UI. Built with Django backend and HTML/CSS/JavaScript frontend.
 
@@ -274,4 +274,4 @@ This project is open source and available for personal and commercial use.
 
 ## Created By
 
-Sojib Web App Development Team
+Keizen Web App Development Team

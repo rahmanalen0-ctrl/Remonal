@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: remonal
+    env: python
+    plan: free
+    pythonVersion: 3.13
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
+    startCommand: gunicorn sojibWebApp.wsgi:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.4
+      - key: DEBUG
+        value: false

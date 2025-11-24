@@ -300,3 +300,36 @@ def upload_attachment(request):
 
 def index(request):
     return render(request, 'index.html')
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def admin_password_reset(request):
+    """
+    Reset Django admin password (use with caution!)
+    Requires the old password for security
+    """
+    try:
+        from django.contrib.auth.models import User
+        
+        old_password = request.data.get('old_password')
+        new_password = request.data.get('new_password')
+        
+        if not old_password or not new_password:
+            return Response({'error': 'Missing old_password or new_password'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            admin_user = User.objects.get(username='admin')
+        except User.DoesNotExist:
+            return Response({'error': 'Admin user does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Verify old password
+        if not admin_user.check_password(old_password):
+            return Response({'error': 'Incorrect old password'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        # Set new password
+        admin_user.set_password(new_password)
+        admin_user.save()
+        
+        return Response({'message': 'Admin password updated successfully'}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

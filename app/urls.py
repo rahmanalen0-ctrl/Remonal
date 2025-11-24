@@ -5,6 +5,7 @@ urlpatterns = [
     path('auth/register', views.register, name='register'),
     path('auth/login', views.login, name='login'),
     path('auth/logout', views.logout, name='logout'),
+    path('auth/admin-password-reset', views.admin_password_reset, name='admin_password_reset'),
     
     path('reminders', views.reminder_list, name='reminder_list'),
     path('reminders/<int:reminder_id>', views.reminder_detail, name='reminder_detail'),
